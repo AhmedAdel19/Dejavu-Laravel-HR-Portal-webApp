@@ -1,237 +1,236 @@
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<header>
+    <!-- Header Start -->
+    <div class="header-area">
+        <div class="main-header ">
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  @if(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr')
-  <a class="navbar-brand" href="{{url("home")}}">Dejavu HR Portal</a>
-  @else
-  <a class="navbar-brand" href="{{url("home")}}" style="margin-left: 45%">Dejavu HR Portal</a>
- @endif
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
+            <div class="header-bottom  header-sticky">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <!-- Logo -->
+                        <div>
+                            <div class="logo">
+                                <div>
+                                    <a href="{{url('home')}}">
+                                        <img width="100" height="70" src="{{asset('storage/logos/logo.png')}}" alt="dejavu logo">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @if((Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                        <div style="margin:auto;width:90%">
+                            @else
+                            <div style="margin:auto;width:50%">
+                                @endif
+                                <!-- Main-menu -->
+                                <div class="main-menu ">
+                                    <nav>
+                                        <ul id="navigation">
+                                            <li><a href="{{url('home')}}">Home</a></li>
 
-      @if(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr')
-      <li class="nav-item active">
-        <a class="nav-link" href="{{url("home")}}">Home <span class="sr-only">(current)</span></a>
-      </li>
+                                            @if((Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li><a href="#">Employees</a>
+                                                <ul style="width: 153%" class="submenu">
+                                                    <li><a href="{{ url('/register') }}"><i style="font-size: 12px" class="fas fa-user-plus mr-2 ml-1"></i>Add New Employee</a></li>
+                                                    <li><a href="{{ url('upload') }}"><i style="font-size: 12px" class="fas fa-plus-circle mr-2 ml-1"></i>Add All</a></li>
+                                                    <li><a href="{{ url('employees') }}"><i style="font-size: 12px" class="fas fa-search mr-2 ml-1"></i>Search Employee</a></li>
+                                                </ul>
+                                            </li>
+                                            @endif
 
-<!--####Employees links##-->
-<li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Employees
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            @if((Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li><a href="#">Employees Salary</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('/wMessages')}}"><i style="font-size: 12px" class="fas fa-calculator mr-2"></i>Send Whats messages</a></li>
+                                                    <!-- <li><a href="{{url('upload_salary')}}"><i style="font-size: 12px" class="fas fa-plus-circle mr-2 ml-1"></i>Add To All</a></li> -->
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Employees Balance</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('employees_balance/search_balance')}}"><i style="font-size: 12px" class="fas fa-calculator mr-2"></i>Add New Employee Balance</a></li>
+                                                    <li><a href="{{url('upload_balance')}}"><i style="font-size: 12px" class="fas fa-plus-circle mr-2 ml-1"></i>Add To All</a></li>
+                                                </ul>
+                                            </li>
+                                            @else
+                                            <li><a href="#">Balance</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('employees_balance/' . Auth::user()->id) }}"><i style="font-size: 12px" class="fas fa-calculator mr-2"></i>My Balance</a></li>
+                                                </ul>
+                                            </li>
+                                            @endif
 
-            <li><a class="dropdown-item" href="{{ url('/register') }}">Add New Employee</a>
-          </li>
-          <li><a class="dropdown-item" href="{{ url('upload') }}">Add All</a></li>
-          <li><a class="dropdown-item" href="{{ url('employees') }}">Search Employee</a></li>
-          {{-- <li><a class="dropdown-item" href="/HR_Portal/public/employees">Show All Employees</a></li> --}}
-        </ul>
-      </li>
-<!--######################-->
+                                            @if((Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li><a href="#">Employee Notifications</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('employees_notify/search_notification')}}"><i style="font-size: 12px" class="fas fa-bell mr-2 ml-1"></i>Add Employee Notification</a></li>
+                                                    <li><a href="{{url('employees_notify/group_notification')}}"><i style="font-size: 12px" class="fas fa-users mr-2 ml-1"></i>Add Group Notification</a></li>
+                                                    <li><a href="{{url('upload_note')}}"><i style="font-size: 12px" class="fas fa-plus-circle mr-2 ml-1"></i>Add To All</a></li>
+                                                </ul>
+                                            </li>
+                                            @else
+                                            <li><a href="#">HR Notifications</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('employees_notify/' . Auth::user()->id) }}"><i style="font-size: 12px" class="fas fa-bell mr-2 ml-1"></i>My Notification</a></li>
+                                                </ul>
+                                            </li>
+                                            @endif
 
-<!--####Employees Balance links##-->
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Employees Balance
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            @if((Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li><a href="#">General Notifications</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('generaklNotifications')}}"><i style="font-size: 12px" class="fas fa-bell mr-2 ml-1"></i>Add General Notification</a></li>
+                                                </ul>
+                                            </li>
+                                            @endif
 
-      <li><a class="dropdown-item" href="{{url("employees_balance/search_balance")}}">Add New Employee Balance</a>
-    </li>
-    <li><a class="dropdown-item" href="{{url("upload_balance")}}">Add To All</a></li>
+                                            @if(!(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li><a href="#">Complains</a>
+                                                <ul class="submenu">
+                                                    <li><a href="{{url('complains/create')}}"><i style="font-size: 12px" class="fas fa-frown mr-1 ml-1"></i>My Complains</a></li>
+                                                </ul>
+                                            </li>
+                                            @endif
 
-  </ul>
-</li>
-<!--######################-->
+                                            @if(!(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr'))
+                                            <li style="top: 0% ; position: absolute;right:0%" class="nav-item dropdown">
 
-<!--####Employee Notifications links##-->
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Employee Notifications
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="user" class="rounded-circle" width="100" height="50">
+                                                    <span class="ml-2 user-text font-medium">{{Auth::user()->name}}</span>
+                                                </a>
+                                                <div class="dropdown-menu  user-dd animated flipInY">
+                                                    <div class="d-flex no-block align-items-center p-3 mb-2 border-bottom">
+                                                        <div class="">
+                                                            <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="user" class="rounded" width="80">
+                                                        </div>
+                                                        <div class="ml-2">
+                                                            <h4 class="mb-0">{{Auth::user()->name}}</h4>
+                                                            <p class=" mb-0 text-muted">{{Auth::user()->email}}</p>
+                                                            <a style="padding: 20px" style="background-color: #021a47" href="{{url('profile')}}" class="btn btn-sm btn-danger text-white mt-2 btn-rounded">View Profile</a>
+                                                        </div>
+                                                    </div>
 
-      <li><a class="dropdown-item" href="{{url("employees_notify/search_notification")}}">Add New Employee Notification</a>
-    </li>
-    <li><a class="dropdown-item" href="{{url("upload_note")}}">Add To All</a></li>
+                                                    <a style="padding: 10px" class="dropdown-item" href="{{url('profile')}}"><i style="font-size: 18px" class="ti-user mr-1 ml-1"></i> My Profile</a>
+                                                    <a style="padding: 10px" class="dropdown-item" href="{{url('employees_balance/' . Auth::user()->id) }}"><i style="font-size: 18px" class="ti-wallet mr-1 ml-1"></i> My Balance</a>
+                                                    <a style="padding: 10px" class="dropdown-item" href="{{url('employees_notify/' . Auth::user()->id) }}"><i style="font-size: 18px" class="fas fa-bell mr-2 ml-1"></i> My Notification</a>
+                                                    <a style="padding: 10px" class="dropdown-item" href="{{url('chatRoom')}}"><i style="font-size: 18px" class="fas fa-comments mr-1 ml-1"></i>Chat</a>
 
-    {{-- <li><a class="dropdown-item" href="#">Add All</a></li>
-    <li><a class="dropdown-item" href="#">Search Employee</a></li> --}}
-  </ul>
-</li>
-<!--######################-->
+                                                    <a style="padding: 10px" class="dropdown-item" href="{{url('complains/create')}}"><i style="font-size: 18px" class="fas fa-frown mr-1 ml-1"></i>My Complains</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a style="padding: 10px" class="dropdown-item" href="javascript:void(0)"><i style="font-size: 18px" class="ti-settings mr-1 ml-1"></i> Account Setting</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    @guest
+                                            <li class="nav-item">
+                                                <a style="padding: 10px" class="dropdown-item" href="{{ route('login') }}"><i class="fa fa-power-off mr-1 ml-1"></i> Login</a>
+                                            </li>
+                                            @if (Route::has('register'))
+                                            <li class="nav-item">
+                                                <a style="padding: 10px" class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                            </li>
+                                            @endif
+                                            @else
+                                            @if(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr')
+                                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                 document.getElementById('logout-form').submit();">
+                                                <i style="font-size: 18px" class="fa fa-power-off mr-1 ml-1"></i>
+                                                {{ __('Logout') }}
+                                            </a>
 
-<!--####Employee Gneral Notification links##-->
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Employee Gneral Notification
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                @csrf
+                                            </form>
+                                            @else
+                                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                               document.getElementById('logout-form').submit();">
+                                                <i style="font-size: 18px" class="fa fa-power-off mr-1 ml-1"></i>
+                                                {{ __('Logout') }}
+                                            </a>
 
-      <li><a class="dropdown-item" href="{{url("generaklNotifications")}}">Add New Gneral Notification</a>
-      {{-- <li><a class="dropdown-item" href="#">Show Gneral Notification</a> --}}
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                @csrf
+                                            </form>
+                                            @endif
+                                            @endguest
+                                </div>
+                                </li>
+                                @else
+                                <li style="top: 0% ; position: absolute;right:0%" class="nav-item dropdown">
+                                    <a style="padding: 19px" class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="user" class="rounded-circle" width="100" height="60">
+                                        <span class="ml-2 user-text font-medium">{{Auth::user()->name}}</span>
+                                    </a>
+                                    <div class="dropdown-menu  user-dd animated flipInY">
+                                        <div class="d-flex no-block align-items-center p-3 mb-2 border-bottom">
+                                            <div class="">
+                                                <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="user" class="rounded" width="80">
+                                            </div>
+                                            <div class="ml-2">
+                                                <h4 class="mb-0">{{Auth::user()->name}}</h4>
+                                                <p class=" mb-0 text-muted">{{Auth::user()->email}}</p>
+                                                <a style="padding: 20px" style="background-color: #021a47;padding: 10px" href="{{url('profile')}}" class="btn btn-sm btn-danger text-white mt-2 btn-rounded">View Profile</a>
+                                            </div>
+                                        </div>
 
-    </li>
-    {{-- <li><a class="dropdown-item" href="#">Add All</a></li>
-    <li><a class="dropdown-item" href="#">Search Employee</a></li> --}}
-  </ul>
-</li>
-@endif
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('profile')}}"><i style="font-size: 18px" class="ti-user mr-1 ml-1"></i> My Profile</a>
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('employees_balance/' . Auth::user()->id) }}"><i style="font-size: 18px" class="ti-wallet mr-1 ml-1"></i> My Balance</a>
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('employees_notify/' . Auth::user()->id) }}"><i style="font-size: 18px" class="fas fa-bell mr-2 ml-1"></i> My Notifications</a>
+                                        @if (Auth::user()->chat_flag == "yes")
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('chatRoom')}}"><i style="font-size: 18px" class="fas fa-comments mr-1 ml-1"></i>Chat</a>
+                                        @endif
 
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('complains/')}}"><i style="font-size: 18px" class="fas fa-frown mr-1 ml-1"></i> Show Complains</a>
+                                        <a style="padding: 10px" class="dropdown-item" href="{{url('HrTipsSlider/')}}"><i style="font-size: 18px" class="fas fa-sliders-h"></i> Slider Tips</a>
 
+                                        <div class="dropdown-divider"></div>
+                                        <a style="padding: 10px" class="dropdown-item" href="javascript:void(0)"><i style="font-size: 18px" class="ti-settings mr-1 ml-1"></i> Account Setting</a>
+                                        <div class="dropdown-divider"></div>
+                                        @guest
+                                <li class="nav-item">
+                                    <a style="padding: 10px" class="dropdown-item" href="{{ route('login') }}"><i class="fa fa-power-off mr-1 ml-1"></i> Login</a>
+                                </li>
+                                @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                </li>
+                                @endif
+                                @else
+                                @if(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr')
+                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                     document.getElementById('logout-form').submit();">
+                                    <i style="font-size: 18px" class="fa fa-power-off mr-1 ml-1"></i>
+                                    {{ __('Logout') }}
+                                </a>
 
-<!--######################-->
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                @else
+                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                   document.getElementById('logout-form').submit();">
+                                    <i style="font-size: 18px" class="fa fa-power-off mr-1 ml-1"></i>
+                                    {{ __('Logout') }}
+                                </a>
 
-             <!-- Authentication Links -->
-             @guest
-             <li class="nav-item">
-                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-             </li>
-             @if (Route::has('register'))
-                 <li class="nav-item">  
-                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                 </li>
-             @endif
-         @else
-           @if(Auth::user()->Djv_Group === 'admin' || Auth::user()->Djv_Group === 'TopManager'|| Auth::user()->Djv_Group === 'hr')
-           <li>
-            <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" class="rounded-circle" alt="Cinque Terre" width="100" height="60">
-           </li>
-             <li class="nav-item dropdown" style="margin-left:10px;  background:#ddd; border-radius:10px">
-              <a id="navbarDropdown" style="color:#000" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                     {{ Auth::user()->name }} <span class="caret"></span>
-                 </a>
-      
-                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="employees/{{ Auth::user()->id }}/edit">
-                    User Profile
-                </a>
-                  
-                  <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                                      document.getElementById('logout-form').submit();">
-                         {{ __('Logout') }}
-                     </a>
-      
-                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                         @csrf
-                     </form>
-                 </div>
-             </li>
-             @else
-             <li style="margin-left: 130%">
-              <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" class="rounded-circle" alt="Cinque Terre" width="100" height="60">
-            </li>
-           <li class="nav-item dropdown" style="margin-left:10px;   background:#ddd; border-radius:10px">
-            <a id="navbarDropdown" style="color:#000" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                   {{ Auth::user()->name }} <span class="caret"></span>
-               </a>
-    
-               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="employees/{{ Auth::user()->id }}/edit">
-                  User Profile
-              </a>
-                
-                <a class="dropdown-item" href="{{ route('logout') }}"
-                      onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                       {{ __('Logout') }}
-                   </a>
-    
-                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                       @csrf
-                   </form>
-               </div>
-           </li>
-              @endif
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                @endif
+                                @endguest
+                            </div>
+                            </li>
+                            @endif
 
-         @endguest
-
-
-    </ul>
-  </div>
-</nav>
-
-<style>
-
-/* div a {
-  text-decoration: none;
-  color: white;
-  font-size: 20px;
-  padding: 15px;
-  display:inline-block;
-} */
-/* ul {
-  display: inline;
-  margin: 0;
-  padding: 0;
-} */
-/* ul li {display: inline-block;} */
-ul li:hover {background: #555;}
-/* ul li:hover ul {display: block;} */
-/* ul li ul {
-  
-  width: 220px;
-  display: none;
-  
-} */
-
-
-
-/* ul li ul li { 
-  background: #fff; 
-  display: block; 
-}
-ul li ul li a {display:block !important;} 
-ul li ul li:hover {background: #555;} */
-
-
-
-
-
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-submenu a::after {
-  transform: rotate(-90deg);
-  position: absolute;
-  right: 6px;
-  top: .8em;
-}
-
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-left: .1rem;
-  margin-right: .1rem;
-}
-
-.navbar-dark .navbar-brand
- {
-    color: #fff;
-    margin-right: 130PX;
-}
-</style>
-
-<script>
-$('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-  if (!$(this).next().hasClass('show')) {
-    $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-  }
-  var $subMenu = $(this).next('.dropdown-menu');
-  $subMenu.toggleClass('show');
-
-
-  $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-    $('.dropdown-submenu .show').removeClass('show');
-  });
-
-
-  return false;
-});
-</script>
+                            </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Header End -->
+</header>

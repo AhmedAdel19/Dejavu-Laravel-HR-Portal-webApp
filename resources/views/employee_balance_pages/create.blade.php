@@ -8,7 +8,7 @@
                 <div style="color:cornsilk" class="card-header d-flex justify-content-center bg-dark">{{ __('Add new Employee Balance') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{url('employees_balance/'.$id)}}">
+                    <form method="POST" action="{{url('employees_balance/'.$id.'/'.$emp_code)}}">
                         @csrf
 
                         <div class="form-group row">

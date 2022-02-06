@@ -1,33 +1,33 @@
 @extends('layouts.master')
 
 @section('content')
+<style>
+.watermark {
+    width: 311px;
+    /* height: 100px; */
+    display: block;
+    font-size: 102px;
+    position: absolute;
+    margin-top: 36%;
+    margin-left: 17%;
+    opacity: 0.9;
+    /* offset-rotate: reverse; */
+    transform-origin: 0 0;
+    transform: rotate(26deg);
+}
 
-{{-- <div class="card d-flex justify-content-center" style="width: 32rem;">
-    <div class="card-header d-flex justify-content-center">
-      <h3>employee info</h3>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->name}}</h6></li>
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->email}}</h6></li>
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->mobile}}</h6></li>
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->Djv_Group}}</h6></li>
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->Djv_Access}}</h6></li>
-      <li class="list-group-item d-flex justify-content-center"><h6>{{$user->title}}</h6></li>
-    </ul>
-
-
-    <div class="col-md-3">
-            <div class="card ml-3" style="max-width: 10rem;">
-                    <div class="card-header bg-info text-white"> Stats.</div>
-                    <div class="card-body">
-                    
-                    <p class="card-text"> All customrt Tickets</p>
-                    </div>
-                </div>
-    </div>
-  </div> --}}
-
-
+.watermark::after {
+  content: "";
+ background:url(https://www.google.co.in/images/srpr/logo11w.png);
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+</style>
     <div class="row">
             <div class="col-md-9">
                     <div class="row">
@@ -38,6 +38,11 @@
                             @foreach($all_general_notes as $note)
                                 <div class="col-md-6">
                                     <div class="card mb-3" style="min-width: 20rem;margin-left:5px">
+                                        @if (!($note->start_date <= $current && $note->end_date >= $current))
+                                        <div class="watermark" id="background">
+                                            <p style="font-size: 27px;" id="bg-text">this notification is Expired</p>
+                                              </div>
+                                        @endif
                                         <div style="color:cornsilk" class="card-header text-white bg-dark">
                                             Note {{$count_b}}
                                         </div>
@@ -62,6 +67,7 @@
                                                     
                                                 </div>
                                             <hr>
+
                                             <div class="card-text">
                                                     {{-- {{ '/HR_Portal/public/employees_notify/'.$note->id.'/edit' }} --}}
                                              <a href="{{url('generaklNotifications/'.$note->id.'/edit') }}" class="btn btn-dark d-flex justify-content-center"> Edit Note</a>
@@ -115,9 +121,4 @@
         </div>
     </div>
 
-    <script>
-            $(".delete").on("submit", function(){
-                return confirm("Do you want to delete this item?");
-            });
-        </script>
   @endsection

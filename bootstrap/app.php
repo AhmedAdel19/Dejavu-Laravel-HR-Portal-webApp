@@ -52,4 +52,6 @@ $app->singleton(
 |
 */
 
+$app->singleton(Yoeunes\Toastr\ToastrServiceProvider::class);
+
 return $app;

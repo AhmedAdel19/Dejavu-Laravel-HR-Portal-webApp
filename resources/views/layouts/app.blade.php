@@ -15,7 +15,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/img/icon.png')}}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -23,12 +24,18 @@
     body{
         background-color:#fff;
     }
+    .card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #021a47;
+    border-bottom: 1px solid rgba(150, 89, 89, 0.125);
+}
 </style>
 <body>
     <div id="app">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
             <div class="container">
-                <a style="margin-left: 45% ; color:#000; font-weight: bold;font-family: Arial" class="navbar-brand" href="{{ url('/') }}">
+                <a style="margin-left: 45% ; color:#021a47; font-weight: bold;font-family: Arial;font-size: 25px" class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'HR Portal') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -45,13 +52,13 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a style="; color:#000; font-weight: bold;font-family: Arial" class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
+                            <!-- <li class="nav-item">
+                                <a style=" color:#021a47; font-weight: bold;font-family: Arial;font-size: 20px" class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li> -->
                             @if (Route::has('register'))
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a style="; color:#000; font-weight: bold;font-family: Arial" class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
+                                </li> --}}
                             @endif
                         @else
                             <li class="nav-item dropdown">

@@ -7,7 +7,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use \App\Events\NewUserAdded;
 class RegisterController extends Controller
 {
     /*
@@ -69,17 +69,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // event(new NewUserAdded($data['name']));
         return User::create([
             'name' => $data['name'],
             'username'=>$data['employee_code'],
             'email' => $data['email'],
-            'password' => Hash::make($data['employee_code']),
+            'password' => password_hash($data['employee_code'],PASSWORD_DEFAULT),
             'mobile' => $data['mobile'],
             'Djv_Group' => $data['emp_group'],
             'Djv_Access' => $data['employe_access'],
             'title' => $data['title'],
             'user_pp' =>'NoImage.png',
             'employee_code' =>$data['employee_code'],
+            'chat_flag' => 'no',
         ])->with('status','User was added successfully!');
+
+        
     }
 }

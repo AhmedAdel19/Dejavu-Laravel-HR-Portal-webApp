@@ -60,6 +60,18 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="start_date" class="col-md-2 col-form-label ">{{ __('Start') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="start_date" name="start_date">  
+                        </div>
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="end_date" class="col-md-2 col-form-label ">{{ __('End ') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="end_date" name="end_date">  
+                        </div>
+
                         <div class="form-group row" style="margin-left: 250px">  
                                 <input type="file" class="form-control col-lg-8" id="img1" placeholder="choose first image" name="img1">  
                         </div>

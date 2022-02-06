@@ -92,7 +92,14 @@ class EmployeesController extends Controller
         {
             $updatedPassword=$user->password;
         }else{
-            $updatedPassword=Hash::make($request->password);
+            $updatedPassword=password_hash($request->password,PASSWORD_DEFAULT);
+        }
+
+        if (isset($request->chek_chat)) {
+            $chat_flag = 'yes';
+        }
+        else{
+            $chat_flag = 'no';
         }
 
         DB::table('users')->where('id', $id)->update(
@@ -102,7 +109,8 @@ class EmployeesController extends Controller
             'password' => $updatedPassword,
             'mobile' => $request->mobile,
             'Djv_Group' => $request->emp_group,
-            'user_pp' => $file_name, ]
+            'user_pp' => $file_name,
+            'chat_flag' => $chat_flag ]
         );
 
         // $user->execute();
@@ -150,16 +158,16 @@ class EmployeesController extends Controller
            array_push($escapedHeader , $escapedItem);
        }
 
-
+       $count_rows = 2;
        //loading other columns
        while($columns=fgetcsv($file))
        {
         $uploaded_emp = new User();
 
-           if($columns[0] == "")
-           {
-               continue;
-           }
+        //    if($columns[0] == "")
+        //    {
+        //        continue;
+        //    }
 
            //trim data
 
@@ -169,19 +177,32 @@ class EmployeesController extends Controller
         $emp_name = $data['name'];
         $emp_email = $data['email'];
         //Hash::make($data['password'])
-        $emp_password = Hash::make($data['code']);
+        $emp_password = password_hash($data['code'],PASSWORD_DEFAULT); 
         $emp_mobile = $data['mobile'];
         $emp_g = $data['group'];
         $emp_access = $data['access'];
         $emp_title = $data['title'];
 
+        
+
       //dd($data);
-
-      
-
+      if(empty($emp_code))
+      {
+        return back()->with('status' , 'File was not upload : one or more employee has code not valid! on row '.$count_rows);
+      }else if($emp_g === "")
+      {
+        return back()->with('status' , 'File was not upload : one or more employee has group not valid ! on row '.$count_rows);
+      }else if($emp_access === "")
+      {
+        return back()->with('status' , 'File was not upload : one or more employee has access not valid ! on row '.$count_rows);
+      }else
+      {
         $uploaded_emp->employee_code = $emp_code;
         $uploaded_emp->name = $emp_name;
-        $uploaded_emp->email = $emp_email;
+        if(empty($emp_email))
+        {
+            $uploaded_emp->email = NULL;
+        }
         $uploaded_emp->password = $emp_password;
         $uploaded_emp->mobile = $emp_mobile;
         $uploaded_emp->Djv_Group = $emp_g;
@@ -189,6 +210,7 @@ class EmployeesController extends Controller
         $uploaded_emp->title = $emp_title;
         $uploaded_emp->username = $emp_code;
         $uploaded_emp->user_pp = 'NoImage.png';
+        $uploaded_emp->chat_flag = 'no';
         
         $check_user = DB::table('users')->where('employee_code', $emp_code)->get();
         $check_user_count = DB::table('users')->where('employee_code', $emp_code)->count();
@@ -197,6 +219,9 @@ class EmployeesController extends Controller
 
         if($check_user_count > 0)
         {
+            if(empty($emp_email)){
+                $emp_email = NULL;
+            }
             DB::table('users')->where('employee_code', $emp_code)->update(
                 ['name'=> $emp_name ,
                 'email'=> $emp_email,
@@ -209,21 +234,24 @@ class EmployeesController extends Controller
                 'username' =>$emp_code
                 ]
             );
+
+            
         }
        
         else
         {
             $uploaded_emp->save();
         }
+      }
 
-
+      $count_rows = $count_rows +1 ;
+      
        }
-       
-       return redirect()->route('employees.index')->with('status' , 'Employees file uploaded Successfully !');
+       return redirect()->route('employees.index')->with('status' , 'File was uploaded successfully !');
     }
     else
     {
-        return redirect()->back()->with('status' , 'No File Selected !');
+        return back()->with('status' , 'No File selected !');
     }
    }
 

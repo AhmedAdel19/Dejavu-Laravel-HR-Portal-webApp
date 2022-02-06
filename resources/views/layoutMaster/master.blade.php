@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+
 	{{-- <link rel="canonical" href="{{asset('templates/ampleadmin/ampleadmin_3.html')}}" /> --}}
     <!-- This page CSS -->
     <link href="{{asset('assets/libs/jquery-steps/jquery.steps.css')}}" rel="stylesheet">
@@ -56,6 +59,8 @@
          @yield('content')
     </div>
 
+    
+
      <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
@@ -83,3 +88,25 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="{{asset('bootstrap/bootstrap.min.js')}}"></script> 
+<script>
+  @if(Session::has('message'))
+    var type = "{{ Session::get('alert-type', 'info') }}";
+    switch(type){
+        case 'info':
+            toastr.info("{{ Session::get('message') }}");
+            break;
+
+        case 'warning':
+            toastr.warning("{{ Session::get('message') }}");
+            break;
+
+        case 'success':
+            toastr.success("{{ Session::get('message') }}");
+            break;
+
+        case 'error':
+            toastr.error("{{ Session::get('message') }}");
+            break;
+    }
+  @endif
+  </script>

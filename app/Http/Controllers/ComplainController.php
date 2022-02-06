@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\complain;
+use App\complain_replies;
+use DB;
 
 class ComplainController extends Controller
 {
@@ -20,7 +22,8 @@ class ComplainController extends Controller
 
     public function create()
     {
-        return view('complain_pages.create');
+        $all_complain = DB::table('complains')->where('emp_code','=', Auth::user()->employee_code)->get();
+        return view('complain_pages.create',compact('all_complain'));
     }
 
     public function store(Request $request)
@@ -54,7 +57,48 @@ class ComplainController extends Controller
 
         $complain->save();
 
-        return redirect('/home')->with('status' , 'complain was sent Successfully !');
+        return redirect('/complains/create')->with('status' , 'complain was sent Successfully !');
+    }
+
+
+    public function storeReply(Request $request)
+    {
+        $Reply = new complain_replies();
+
+        // if($request->hasFile('img1'))
+        // {
+        //     $file1 = $request->file('img1');
+        //     $ext1 = $file1->getClientOriginalExtension();
+        //     $file_name1 = 'complain_image1' . '_' . time() . '.' . $ext1 ;
+        //     $file1->storeAs('public/complainImages' , $file_name1);
+        //     //dd($path1);
+        // }
+        // else
+        // {
+        //     $file_name1 = 'NoImage.png';
+        // }
+
+        // if (isset($request->chek_identy)) {
+        //     $complain->secret = 'yes';
+        // }
+        // else{
+        //     $complain->secret = 'no';
+        // }
+    
+        $Reply->reply = $request->reply_content;
+        $Reply->user_id = Auth::user()->id;
+        $Reply->employee_code = Auth::user()->employee_code;
+
+        $Reply->complain_id = $request->complain_id;
+
+        // $complain->complain_image = $file_name1;
+
+        // $complain->emp_code = Auth::user()->employee_code;
+        // $complain->user()->associate($request->user());
+
+        $Reply->save();
+
+        return redirect('/complains/create')->with('status' , 'complain Replay was sent Successfully !');
     }
 
     /**
@@ -101,6 +145,6 @@ class ComplainController extends Controller
     {
         $complain = complain::find($id);
         $complain->delete();
-        return redirect(url('/complains'))->with('SuccessMessage','your complain Deleted successfully!');
+        return redirect(url('/complains/create'))->with('SuccessMessage','your complain Deleted successfully!');
     }
 }

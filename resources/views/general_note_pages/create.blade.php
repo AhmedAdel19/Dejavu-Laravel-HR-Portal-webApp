@@ -38,6 +38,17 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="start_date" class="col-md-2 col-form-label ">{{ __('Start') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="start_date" name="start_date" >  
+                        </div>
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="end_date" class="col-md-2 col-form-label ">{{ __('End ') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="end_date" name="end_date" >  
+                        </div>
                         <div class="form-group row" style="margin-left: 250px">  
                                 <input type="file" class="form-control col-lg-8" id="img1" placeholder="choose first image" name="img1">  
                         </div>
@@ -45,24 +56,6 @@
                                 <input type="file" class="form-control col-lg-8" id="img2" placeholder="choose second image" name="img2">  
                         </div>
 
-
-                        <!-- testtttttt-->
-
-                        {{-- <div class="form-group row">
-                                <label for="group" class="col-md-4 col-form-label text-md-right">{{ __('Add To') }}</label>
-                                <div class="col-md-6">
-                                <select class="mdb-select  md-outline colorful-select dropdown-primary form-control" name="emp_group" id="emp_group">
-                                    @php
-                                        $all_groups = DB::select('select * from  djv_groups order by id desc'); 
-                                    @endphp
-                                        <option value="" disabled selected>Choose employee</option>
-                                        @foreach ($all_groups as $group)
-                                        <option value={{$group->group_name}}>{{$group->group_name}}</option>
-                                        @endforeach
-                                      </select> 
-          
-                                </div>
-                            </div> --}}
                         
                         <!--ttttttttttt-->                        
                         <div class="form-group row mb-0">

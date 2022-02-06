@@ -3,7 +3,7 @@
 @section('content')
 {{-- 
 <h1>{{$query}}</h1> --}}
-
+{{-- <h1>{{Session::get('data')}}</h1> --}}
 <div class="container mb-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -17,7 +17,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"  autofocus>
+                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}">
 
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback" role="alert">
@@ -132,7 +132,7 @@
         <td>{{$user->Djv_Group}}</td>
         <td>{{$user->Djv_Access}}</td>
         <td>{{$user->title}}</td>
-        <td><a href="{{url('employees/' . $user->id .'/edit')}}" class="btn btn-primary float-left mr-3"> Edit</a> </td>
+        <td><a style="background-color: darkolivegreen" href="{{url('employees/' . $user->id .'/edit')}}" class="btn btn-primary float-left mr-3"> Edit</a> </td>
         <td>           
             <form id="delete-form-{{$user->id}}" class="delete" action="{{route('employees.destroy' , ['id'=> $user->id])}}" method="POST">
                 @csrf
@@ -140,7 +140,7 @@
                 {{-- <button type="submit" class="btn btn-danger float-left">Delete</button> --}}
             </form>
 
-            <button onclick="if(confirm('Are you sure you want to delete this employee?')){
+            <button style="background-color:darkred" onclick="if(confirm('Are you sure you want to delete this employee?')){
                 event.preventDefault();
                 document.getElementById('delete-form-{{$user->id}}').submit();
               }else
@@ -166,9 +166,4 @@
     </div>
 </div> --}}
 
-  <script>
-        $(".delete").on("submit", function(){
-            return confirm("Do you want to delete this employee?");
-        });
-  </script>
   @endsection

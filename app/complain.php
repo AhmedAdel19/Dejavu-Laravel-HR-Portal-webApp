@@ -10,4 +10,9 @@ class complain extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function replies()
+    {
+        $this->hasMany(complain_replies::class);
+    }
 }

@@ -8,7 +8,7 @@ $(function() {
     var a = c3.generate({
         bindto: "#stacked-bar",
         size: { height: 400 },
-        color: { pattern: ["#2962FF", "#4fc3f7", "#ff7676", "#343a40"] },
+        color: { pattern: ["#2962FF", "#4fc3f7", "#ff7676", "#021a47"] },
         data: {
             columns: [
                 ["option1", -150, 150, 100, 350, -150, 200],

@@ -8,7 +8,7 @@
                 <div style="color:cornsilk" class="card-header d-flex justify-content-center bg-dark">{{ __('Add new Employee Notification') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{url('employees_notify/'.$id)}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{url('employees_notify/'.$id.'/'.$emp_code)}}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -38,12 +38,23 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="start_date" class="col-md-2 col-form-label ">{{ __('Start') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="start_date" name="start_date">  
+                        </div>
+                        <div class="form-group row" style="margin-left: 140px">  
+                            <label for="end_date" class="col-md-2 col-form-label ">{{ __('End ') }}</label>
+
+                            <input type="date" class="form-control col-lg-7" id="end_date" name="end_date">  
+                        </div>
                         <div class="form-group row" style="margin-left: 250px">  
                                 <input type="file" class="form-control col-lg-8" id="img1" placeholder="choose first image" name="img1">  
                         </div>
                         <div class="form-group row" style="margin-left: 250px">  
                                 <input type="file" class="form-control col-lg-8" id="img2" placeholder="choose second image" name="img2">  
                         </div>
+
 
 
                         <!-- testtttttt-->

@@ -34,26 +34,32 @@ a.edit {
 border: none;
   outline: 0;
   display: inline-block;
-  padding: 8px;
+  padding: 20px;
   color: #fff;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
   width: 100%;
   font-size: 22px;
+  height: 50px;
 }
 
-button:hover, a:hover {
+/* button:hover, a:hover {
   opacity: 0.7;
-}
+} */
 p{
     font-size: 20px
+}
+.image_style{
+  margin-left: 28%;
+    border-radius: 70%;
+    width: 40%;
 }
 </style>
 
 
   <div class="card">
-    <img src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="John" style="border-radius: 50px;width:100%">
+    <img class="image_style" src="{{asset('storage/EmployeeProfileImages/'. Auth::user()->user_pp)}}" alt="John">
     <h1>{{Auth::user()->name}}</h1>
     <h1 class="po">{{Auth::user()->Djv_Group}}</h1>
     <p>{{Auth::user()->email}}</p>

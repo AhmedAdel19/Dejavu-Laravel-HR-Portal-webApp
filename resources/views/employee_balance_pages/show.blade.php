@@ -45,8 +45,9 @@
                         <div style="background-color:lavender"  class="card-body">
                         
                         <p class="card-text"> All employee Balances: {{$count}} </p>
-
-                        <a href="{{url('employees_balance/'.$user->id.'/create' )}}" class="btn btn-dark"> Add new Balance</a>
+                        @if((Auth::user()->Djv_Group == 'admin' || Auth::user()->Djv_Group == 'TopManager'|| Auth::user()->Djv_Group == 'hr'))
+                        <a href="{{url('employees_balance/'.$user->id.'/'.$user->employee_code.'/create' )}}" class="btn btn-dark"> Add new Balance</a>
+                        @endif
 
                         </div>
                     </div>
@@ -83,17 +84,28 @@
                                     <div class="card-text">
                                         {{$balance->sick_leave}}
                                     </div>
+                                    @if((Auth::user()->Djv_Group == 'admin' || Auth::user()->Djv_Group == 'TopManager'|| Auth::user()->Djv_Group == 'hr'))
                                     <hr>
                                     <div class="card-text">
                                      <a href="{{url('employees_balance/'.$balance->id.'/edit')}}" class="btn btn-dark d-flex justify-content-center"> Edit Balance</a>
                                     <hr>
-                                    <form class="delete d-flex justify-content-center"  action="{{route('employee_balance.destroy' , ['user_id'=> $user->id , 'id'=>$balance->id])}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            
-                                            <button type="submit" class="btn btn-danger" style="width:100%">Delete Balance</button>
-                                        </form>
+                                    <form id="delete-form-{{$balance->id}}"  class="delete d-flex justify-content-center"  action="{{route('employee_balance.destroy' , ['user_id'=> $user->id , 'id'=>$balance->id])}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')                                         
+                                        {{-- <button type="submit" class="btn btn-danger" style="width:100%">Delete Note</button> --}}                                       
+                                    </form>
+
+                                    <button onclick="if(confirm('Are you sure you want to delete this Balance?')){
+                                        event.preventDefault();
+                                        document.getElementById('delete-form-{{$balance->id}}').submit();
+                                      }else
+                                      {
+                                        event.preventDefault();
+                                      }
+                              
+                                      " class="btn btn-danger" style="width:100%">Delete</button>
                                     </div>
+                                    @endif
                                 </div>    
                             </div>
                        </div>
@@ -114,9 +126,4 @@
         </div>
     </div>
 
-    <script>
-            $(".delete").on("submit", function(){
-                return confirm("Do you want to delete this item?");
-            });
-        </script>
   @endsection

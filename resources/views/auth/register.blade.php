@@ -86,13 +86,13 @@
                 </section> --}}
                 <!-- Step 3 -->
                 <h6>Group and Access</h6>
-                <section>
+                <section style="height: 500px;">
                     <!-- testtttttt-->
 
                     <div class="form-group row d-flex justify-content-center">
                         <label for="group">{{ __('Group') }}</label>
-                        <div class="col-md-6">
-                        <select class="mdb-select  md-outline colorful-select dropdown-primary form-control" name="emp_group" id="emp_group" >
+                        <div   class="col-md-6">
+                        <select  class="mdb-select  md-outline colorful-select dropdown-primary form-control" name="emp_group" id="emp_group" >
                             @php
                                 $all_groups = DB::select('select * from  djv_groups order by id desc'); 
                             @endphp
@@ -113,8 +113,7 @@
                                 <option value="" disabled selected>Choose Employee Access</option>
                                 <option value="Admin">Admin</option>
                                 <option value="normal employee">normal employee</option>
-
-                                </select> 
+                        </select> 
     
                         </div>
                     </div>
@@ -148,7 +147,7 @@
     <script src="{{asset('assets/libs/jquery/dist/jquery.min.js')}}"></script>
     <!-- Bootstrap tether Core JavaScript -->
     <script src="{{asset('assets/libs/popper.js/dist/umd/popper.min.js')}}"></script>
-    <script src="{{asset('assets/libs/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/libs/bootstrap/dist/js/bootstrap.min.js')}}"></script> --}}
     <!-- apps -->
     <script src="{{asset('dist/js/app.min.js')}}"></script>
     <script src="{{asset('dist/js/app.init.mini-sidebar.js')}}"></script>

@@ -12,7 +12,7 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('First Name') }}</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value={{$user->name}} >
@@ -91,6 +91,18 @@
                         @if((Auth::user()->Djv_Group == 'admin' || Auth::user()->Djv_Group == 'TopManager'|| Auth::user()->Djv_Group == 'hr'))
 
                         <div class="form-group row">
+                                <label for="chat" class="col-md-4 col-form-label text-md-right">{{ __('Chat') }}</label>
+                                <div style="margin-top: 1%;margin-left: 2%;" class="custom-control custom-checkbox col-md-6">
+                                  @if ($user->chat_flag === "yes")
+                                  <input type="checkbox" class="custom-control-input" id="chek_chat" name="chek_chat" checked>
+                                  @else
+                                  <input type="checkbox" class="custom-control-input" id="chek_chat" name="chek_chat">
+                                  @endif
+                                    <label class="custom-control-label" for="chek_chat"><span style="color: #000;font-size: 17px" >can chat!?</span></label>          
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="group" class="col-md-4 col-form-label text-md-right">{{ __('Group') }}</label>
                                 <div class="col-md-6">
                                 <select class="mdb-select  md-outline colorful-select dropdown-primary form-control" name="emp_group" id="emp_group">
@@ -105,6 +117,8 @@
           
                                 </div>
                             </div>
+
+
                         
                         <!--ttttttttttt-->
                         <div class="form-group row">

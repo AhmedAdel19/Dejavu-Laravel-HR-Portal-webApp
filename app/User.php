@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'mobile' , 'Djv_Group' , 'Djv_Access' , 'title','user_pp','employee_code','username'
+        'name', 'email', 'password', 'mobile' , 'Djv_Group' , 'Djv_Access' , 'title','user_pp','employee_code','username','chat_flag'
     ];
 
     /**
@@ -41,4 +41,21 @@ class User extends Authenticatable
     {
         return $this->hasMany(complain::class);
     }
+
+    public function balances()
+    {
+        return $this->hasMany(employee_balance::class);
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(employee_note::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'from');
+    }
+
+
 }

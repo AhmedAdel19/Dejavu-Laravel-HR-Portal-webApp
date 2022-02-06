@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\employee_note;
 use App\employee_balance;
-
+use Carbon\Carbon;
 use DB;
 
 class HomeController extends Controller
@@ -28,15 +28,24 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $current = Carbon::today()->toDateString();
         $auth_user_annual_leave = DB::table('employee_balances')->where('emp_id', '=', auth()->user()->id)->latest()->value('annual_leave'); // considers created_at field by default.
         $auth_user_sick_leave = DB::table('employee_balances')->where('emp_id', '=', auth()->user()->id)->latest()->value('sick_leave'); // considers created_at field by default.
+ 
 
-        // $auth_user_note1 = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->value('note_text1'); // considers created_at field by default.
-        // $auth_user_note2 = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->value('note_text2'); // considers created_at field by default.        $auth_user_annual_leave = DB::table('employee_balances')->where('emp_id', '=', auth()->user()->id)->latest()->value('annual_leave'); // considers created_at field by default.
-        // $auth_user_note_img1 = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->value('note_image1'); // considers created_at field by default.
-        // $auth_user_note_img2 = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->value('note_image2'); // considers created_at field by default.
-       
-        $last_notes = DB::table('general_notes')->latest()->take(2)->get();
+        $hr_tips = DB::table('hr_tips_sliders')->select('*')->orderBy('id')->take(3)->get();
+        $count_of_tips = $hr_tips->count();
+        if($count_of_tips == 0)
+        {
+            $last_tips = 'No Any Tips Yet'; 
+        }
+        if($count_of_tips <= 3)
+        {
+            $last_tips = DB::table('hr_tips_sliders')->select('*')->latest()->take($count_of_tips)->get();
+        }
+
+
+        $last_notes = DB::table('general_notes')->where('start_date','<=',$current)->where('end_date','>=',$current)->take(2)->get();
         $count_of_Gnotes = $last_notes->count();
         if($count_of_Gnotes == 0)
         {
@@ -44,11 +53,11 @@ class HomeController extends Controller
         }
         if($count_of_Gnotes <= 2)
         {
-            $last_notes = DB::table('general_notes')->latest()->take($count_of_Gnotes)->get();
+            $last_notes = DB::table('general_notes')->where('start_date','<=',$current)->where('end_date','>=',$current)->latest()->take($count_of_Gnotes)->get();
         }
 
         //-------------------------------
-        $last_hr_notes = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->take(1)->get();
+        $last_hr_notes = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->where('start_date','<=',$current)->where('end_date','>=',$current)->take(1)->get();
         $count_of_Enotes = $last_hr_notes->count();
         if($count_of_Enotes == 0)
         {
@@ -56,9 +65,22 @@ class HomeController extends Controller
         }
         if($count_of_Enotes <= 1)
         {
-            $last_hr_notes = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->latest()->take($count_of_Enotes)->get();
+            $last_hr_notes = DB::table('employee_notes')->where('emp_id', '=', auth()->user()->id)->where('start_date','<=',$current)->where('end_date','>=',$current)->latest()->take($count_of_Enotes)->get();
         }
         //-------------------------------
+
+        //-------------------------------
+        $salary_q = DB::table('employee_salaries')->where('user_id', '=', auth()->user()->id)->get();
+        $count_of_salary = $salary_q->count();
+        if($count_of_salary == 0)
+        {
+            $salary_details = ''; 
+        }else
+        {
+            $salary_details = DB::table('employee_salaries')->where('user_id', '=', auth()->user()->id)->latest()->take(1)->get();
+        }
+        //-------------------------------
+        
 
         if($auth_user_annual_leave == null)
         {
@@ -70,26 +92,7 @@ class HomeController extends Controller
             $auth_user_sick_leave = 'no sick leave for you yet now';
         }
 
-        // if($auth_user_note1 == null)
-        // {
-        //     $auth_user_note1 = 'no Hr Notification for you yet now';
-        // }
 
-        // if($auth_user_note2 == null)
-        // {
-        //     $auth_user_note2 = 'no Hr Notification for you yet now';
-        // }
-
-        // if($auth_user_note_img1 == null)
-        // {
-        //     $auth_user_note_img1 = 'NoImage.png';
-        // }
-
-        // if($auth_user_note_img2 == null)
-        // {
-        //     $auth_user_note_img2 = 'NoImage.png';
-        // }
-
-        return view('home' , compact('auth_user_annual_leave' , 'auth_user_sick_leave'  , 'auth_user_note2' , 'auth_user_note_img1' , 'auth_user_note_img2' , 'last_notes' , 'last_hr_notes'));
+        return view('home' , compact('auth_user_annual_leave' , 'auth_user_sick_leave'  , 'last_notes' , 'last_hr_notes','salary_details','last_tips'));
     }
 }

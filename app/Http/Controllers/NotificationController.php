@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\employee_note;
 use DB;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
@@ -68,7 +69,7 @@ class NotificationController extends Controller
             }else{
                 $all_users =  DB::select('select * from users order by id desc');
             }
-           return view('employee_note_pages.index' , compact('all_users' , 'count'));
+           return view('employee_note_pages.index' , compact('all_users' ));
     
         }
 
@@ -77,21 +78,22 @@ class NotificationController extends Controller
     {
 
         $user = User::find($id);
+        $current = Carbon::today()->toDateString();
 
         $all_emp_notes = employee_note::where('emp_id' ,'=', $id)->orderBy('id')->paginate(4);
-        //$all_emp_balances = User::orderBy('id' , 'desc')->paginate(5);
+        // $all_emp_notes = DB::table('employee_notes')->where('emp_id', '=', $id)->where('start_date','<=',$current)->where('end_date','>=',$current)->get();
         $count = $all_emp_notes->count();
-        return view('employee_note_pages.show' , compact('user' , 'count' , 'all_emp_notes'));
+        return view('employee_note_pages.show' , compact('user' , 'count' , 'all_emp_notes','current'));
 
     }
 
-    public function create_note($id)
+    public function create_note($id, $emp_code)
     {
-        return view('employee_note_pages.create', compact('id'));
+        return view('employee_note_pages.create', compact('id', 'emp_code'));
     }
 
 
-    public function store_note(Request $request,$id)
+    public function store_note(Request $request,$id,$emp_code)
     {
         $note = new employee_note();
 
@@ -120,18 +122,118 @@ class NotificationController extends Controller
         {
             $file_name2 = 'NoImage.png';
         }
-    
+        $dateTimeStart = Carbon::parse($request->start_date);
+        $dateTimeEnd = Carbon::parse($request->end_date);
+
+        $start =$request['start_date'] = $dateTimeStart->format('Y-m-d');
+        $end =$request['end_date'] = $dateTimeEnd->format('Y-m-d');
+
         $note->note_text1 = $request->note1;
         $note->note_text2 = $request->note2;
+        $note->start_date = $start;
+        $note->end_date = $end;
         $note->note_image1 = $file_name1;
         $note->note_image2 =$file_name2;
         $note->emp_id = $id;
+        $note->emp_code = $emp_code;
 
+        // $token = User::select('user_device_token')->where('employee_code', $emp_code)->get();
+        $user_device_token = DB::table('users')->select('user_device_token')->where('employee_code', '=', $emp_code)->value('user_device_token');
 
+        // dd($token); die();
         $note->save();
+        $this->fcm("New HR Notification" ,$request->note1 , $user_device_token);
 
         return redirect('/employees_notify/'.$id.'')->with('status' , 'Note was add Successfully !');
     }
+
+    public function fcm($title , $note , $token){
+
+        $API_ACCESS_KEY = "AAAAxBaGf1M:APA91bFFhS_nmiC9mse3f2A6MO4x6rB6afCIqNn-O0NIMcSOIKuABrhsc2WFT9u9zPysyqJ0A-vg3dbMRxibMiOBnA9sRZW6y6xfP3gMlxTo0RjcKpckaElGUjAFVppHIfffxWay8SWT";
+
+        // define('API_ACCESS_KEY','AAAAhQLwUjg:APA91bEy4G-dBQWQMkwzkbSKxcRzlBb0KV0-hv0gyMD_gASfWc-NRgTfDdJUErvWQjAkXPLpA7Y6T78esPbmknJ_iphivlEjwSq6RSbfU81wfMxsbF0y67WRs4yITMovBi_75Jrqe9GI');
+        $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+        ;
+       
+           $notification = [
+                   'title' => $title,
+                   'body' => $note,
+                   'icon' =>'myIcon', 
+                   'sound' => 'mySound'
+               ];
+               $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+       
+               $fcmNotification = [
+                   //'registration_ids' => $tokenList, //multple token array
+                   'to'        => $token, //single token
+                   'notification' => $notification,
+                   'data' => $extraNotificationData
+               ];
+       
+               $headers = [
+                   'Authorization: key=' . $API_ACCESS_KEY,
+                   'Content-Type: application/json'
+               ];
+       
+       
+               $ch = curl_init();
+               curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+               curl_setopt($ch, CURLOPT_POST, true);
+               curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+               curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+               curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+               $result = curl_exec($ch);
+               curl_close($ch);
+       
+       
+               echo $result;
+       
+       
+       
+           // // $title = $request->title;
+           // // $message = $request->message;
+           // // $type = $request->type;
+           // // $notification_ids= $request->notification_ids =array();
+           // define( 'API_ACCESS_KEY', 'AAAAhQLwUjg:APA91bHYk1RefpNhAgVXfXvLDmQmfALr-0vZeqnI8coZG-zwh2XIrNBR9y0NSd0knfP3bh9LvRyOEPmOKKECzUVuO3Edz5tLKdVrbXpxLqMzav6xbMfmj4WwZCBOnfO-jSThdnmDbPJ6');
+           // // $registrationIds = $notification_ids;
+           // $registrationIds = array('eiDb_fUSQOq4NjH9I1YuXI:APA91bFhcrLcyqNHY8yApABEYxHLbqJebhcEriUiFl2mPiZx6qGtRhvER2Pv1XJ_obH6n7RL3SiB9aC_-tbGLMLwmQ2H4FK0J9HFsSCbRnmK9ykzf2neC5e4vBVQyBs0-8Toqfu2BNRb');
+           // $msg = array
+           //     ( 
+           //         'title'         => "test title",
+           //         'message'       => "test message message",
+           //         'summaryText'   => 'The internet is built on cat pictures',
+           //         'click_action'  => 'FCM_PLUGIN_ACTIVITY',
+           //         'vibrate'       => 1,
+           //         'sound'         => 1,
+           //         'type'          => "get"
+           //     );
+        
+           // $fields = array
+           // (
+           //     'registration_ids'  => $registrationIds,
+           //     'data'              => $msg
+              
+           // );
+            
+           // $headers = array
+           // (
+           //     'Authorization: key=' . API_ACCESS_KEY,
+           //     'Content-Type: application/json'
+           // );
+            
+           // $ch = curl_init();
+           // curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+           // curl_setopt( $ch,CURLOPT_POST, true );
+           // curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+           // curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+           // curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+           // curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+           // $result = curl_exec($ch );
+           // curl_close( $ch );
+           // return $result;
+           // // var_dump($fields);
+       }
 
     public function edit_employee_note($id)
     {
@@ -171,10 +273,22 @@ class NotificationController extends Controller
             $file_name2 = $note->note_image2;
         }
 
+        $dateTimeStart = Carbon::parse($request->start_date);
+        $dateTimeEnd = Carbon::parse($request->end_date);
+
+        $start =$request['start_date'] = $dateTimeStart->format('Y-m-d');
+        $end =$request['end_date'] = $dateTimeEnd->format('Y-m-d');
+
         $note->note_text1 = $request->note1;
         $note->note_text2 = $request->note2;
+        $note->start_date = $start;
+        $note->end_date = $end;
         $note->note_image1 = $file_name1;
         $note->note_image2 = $file_name2;
+        // $note->emp_code
+        $user_device_token = DB::table('users')->select('user_device_token')->where('employee_code', '=', $note->emp_code)->value('user_device_token');
+
+        $this->fcm("New HR Notification" ,$request->note1 , $user_device_token);
 
         $note->save();
 
@@ -232,13 +346,6 @@ class NotificationController extends Controller
                continue;
            }
 
-           //trim data
-
-        // foreach ($columns as $key => &$value) 
-        // {
-        //    $value = preg_replace('/\D/' , '' , $value);
-
-        // }
 
         $data = array_combine($escapedHeader , $columns);
 
@@ -249,6 +356,12 @@ class NotificationController extends Controller
         $note_text2 =$data['snote'];
         $note_image1 = $data['fnoteimage'];
         $note_image2 = $data['snoteimage'];
+
+        $dateTimeStart = Carbon::parse($data['startdate']);
+        $dateTimeEnd = Carbon::parse($data['enddate']);
+    
+        $start =$data['startdate']= $dateTimeStart->format('Y-m-d');
+        $end =$data['enddate']= $dateTimeEnd->format('Y-m-d');
 
         if(($note_image1 ===""))
         {
@@ -266,22 +379,25 @@ class NotificationController extends Controller
 
         if($check_user_count > 0)
         {
-            $check_user_notes_count = DB::table('employee_notes')->where('emp_id', $emp_id)->count();
+            // $check_user_notes_count = DB::table('employee_notes')->where('emp_id', $emp_id)->count();
 
-            if($check_user_notes_count > 0)
-            {
+            // if($check_user_notes_count > 0)
+            // {
 
-                    DB::table('employee_notes')->where('emp_id', $emp_id)->update(
-                        ['note_text1'=> $note_text1 ,
-                        'note_text2'=> $note_text2,
-                        'emp_id'=> $emp_id ,
-                        'note_image1'=> $note_image1 ,
-                        'note_image2'=> $note_image2 ,
-                        ]
-                    );
+            //         DB::table('employee_notes')->where('emp_id', $emp_id)->update(
+            //             ['note_text1'=> $note_text1 ,
+            //             'note_text2'=> $note_text2,
+            //             'emp_id'=> $emp_id ,
+            //             'note_image1'=> $note_image1 ,
+            //             'note_image2'=> $note_image2 ,
+            //             'emp_code'=>$emp_code,
+            //             'start_date' =>$start,
+            //             'end_date' =>$end,
+            //             ]
+            //         );
              
-            }else
-            {
+            // }else
+            // {
                 $uploaded_emp_note = new employee_note();
     
                 $uploaded_emp_note->note_text1 = $note_text1;
@@ -289,8 +405,14 @@ class NotificationController extends Controller
                 $uploaded_emp_note->note_image1 = $note_image1;
                 $uploaded_emp_note->note_image2 = $note_image2;
                 $uploaded_emp_note->emp_id = $emp_id;
+                $uploaded_emp_note->emp_code = $emp_code;
+                $uploaded_emp_note->start_date = $start;
+                $uploaded_emp_note->end_date = $end;
+                $user_device_token = DB::table('users')->select('user_device_token')->where('employee_code', '=', $emp_code)->value('user_device_token');
+
+                $this->fcm("New HR Notification" ,$note_text1 , $user_device_token);
                 $uploaded_emp_note->save();
-            }
+            // }
         }else{
 
             return redirect('/employees_notify/search_notification')->with('status' , 'may one or more employee code not valid try again please!');
@@ -346,12 +468,28 @@ class NotificationController extends Controller
         $file_name2 = 'NoImage.png';
     }
 
+    $dateTimeStart = Carbon::parse($request->start_date);
+    $dateTimeEnd = Carbon::parse($request->end_date);
+
+    $start =$request['start_date'] = $dateTimeStart->format('Y-m-d');
+    $end =$request['end_date'] = $dateTimeEnd->format('Y-m-d');
+
+    $all_users_device_token = DB::table('users')->select('user_device_token')->where('Djv_Group','=',$group)->where('user_device_token' , '!=' , null)->get();
+    foreach ($all_users_device_token as $token => $value) {
+        if($value != null){
+            $this->fcm("New HR Notification" ,$request->note1 , $value->user_device_token);
+
+        }
+    }
     foreach ($all_users as $key => $user) {
         $note = new employee_note();
         $note->note_text1 = $request->note1;
         $note->note_text2 = $request->note2;
         $note->note_image1 = $file_name1;
         $note->note_image2 =$file_name2;
+        $note->start_date = $start;
+        $note->end_date = $end;
+        $note->emp_code = $user->employee_code;
         $note->emp_id = $user->id;
         $note->save();
     }

@@ -15,6 +15,9 @@ Route::get('/', function () {
     return redirect('home/');
 });
 
+// Route::get('/chatRoom', function () {
+//     return view('chat_home');
+// });
 
 //Add new Employee
 Route::get('/employees', 'EmployeesController@index')->name('employees.index');
@@ -37,8 +40,8 @@ Route::post('/upload', 'EmployeesController@storeData');
 Route::get('/employees_balance/search_balance', 'BalanceController@user_index')->name('employee_balance.index_users');
 Route::get('/employees_balance/{id}', 'BalanceController@show_employee_balance')->name('employee_balance.show');
 Route::post('/employees_balance/search', 'BalanceController@search')->name('employee_balance.search');
-Route::get('/employees_balance/{id}/create', 'BalanceController@create_balance')->name('employee_balance.create');
-Route::post('/employees_balance/{id}', 'BalanceController@store_balance')->name('employee_balance.store');
+Route::get('/employees_balance/{id}/{emp_code}/create', 'BalanceController@create_balance')->name('employee_balance.create');
+Route::post('/employees_balance/{id}/{emp_code}', 'BalanceController@store_balance')->name('employee_balance.store');
 Route::get('/employees_balance/{id}/edit', 'BalanceController@edit_employee_balance')->name('employee_balance.edit');
 Route::put('/employees_balance/{id}', 'BalanceController@update_employee_balance')->name('employee_balance.update');
 Route::delete('/employees_balance/{user_id}/{id}', 'BalanceController@destroy_employee_balance')->name('employee_balance.destroy');
@@ -51,6 +54,29 @@ Route::post('/upload_balance', 'BalanceController@storeData');
 
 //---------------------------------------------------------------------------------------------------
 
+
+//---------------------------------------------------------------------------------------------------
+//Add new Employee Salary
+
+
+Route::get('/employees_salary/search_salary', 'EmployeeSalaryController@user_index')->name('employee_salary.index_users');
+Route::get('/employees_salary/{id}', 'EmployeeSalaryController@show_employee_salary')->name('employee_salary.show');
+Route::post('/employees_salary/search', 'EmployeeSalaryController@search')->name('employee_salary.search');
+Route::get('/employees_salary/{id}/{emp_code}/create', 'EmployeeSalaryController@create_salary')->name('employee_salary.create');
+Route::post('/employees_salary/{id}/{emp_code}', 'EmployeeSalaryController@store_salary')->name('employee_salary.store');
+Route::get('/employees_salary/{id}/edit', 'EmployeeSalaryController@edit_employee_salary')->name('employee_salary.edit');
+Route::put('/employees_salary/{id}', 'EmployeeSalaryController@update_employee_salary')->name('employee_salary.update');
+Route::delete('/employees_salary/{user_id}/{id}', 'EmployeeSalaryController@destroy_employee_salary')->name('employee_salary.destroy');
+//---------------------------------------------------------------------------------------------------
+
+
+//upload employee balance file
+Route::get('/upload_salary', 'EmployeeSalaryController@showForm');
+Route::post('/upload_salary', 'EmployeeSalaryController@storeData');
+
+//---------------------------------------------------------------------------------------------------
+
+
 //---------------------------------------------------------------------------------------------------
 //Add new Employee notification
 
@@ -60,8 +86,8 @@ Route::post('/employees_notify/group_notification', 'NotificationController@grou
 Route::get('/employees_notify/search_notification', 'NotificationController@user_index')->name('employee_note.index_users');
 Route::get('/employees_notify/{id}', 'NotificationController@show_employee_notes')->name('employee_note.edit');
 Route::post('/employees_notify/search', 'NotificationController@search')->name('employee_note.search');
-Route::get('/employees_notify/{id}/create', 'NotificationController@create_note')->name('employee_note.create');
-Route::post('/employees_notify/{id}', 'NotificationController@store_note')->name('employee_note.store');
+Route::get('/employees_notify/{id}/{emp_code}/create', 'NotificationController@create_note')->name('employee_note.create');
+Route::post('/employees_notify/{id}/{emp_code}', 'NotificationController@store_note')->name('employee_note.store');
 Route::get('/employees_notify/{id}/edit', 'NotificationController@edit_employee_note')->name('employee_note.edit');
 Route::put('/employees_notify/{id}', 'NotificationController@update_employee_note')->name('employee_note.update');
 Route::delete('/employees_notify/{user_id}/{id}', 'NotificationController@destroy_employee_note')->name('employee_note.destroy');
@@ -88,6 +114,18 @@ Route::put('/generaklNotifications/{id}', 'GeneralNotificationController@update_
 //---------------------------------------------------------------------------------------------------
 
 
+//---------------------------------------------------------------------------------------------------
+//Add Slider Tips
+
+
+Route::get('/HrTipsSlider', 'HrTipsSliderController@index')->name('hr_tip.index');
+Route::get('/HrTipsSlider/createTip', 'HrTipsSliderController@create_tip')->name('hr_tip.create');
+Route::post('/HrTipsSlider', 'HrTipsSliderController@store_tip')->name('hr_tip.store');
+Route::delete('/HrTipsSlider/{id}', 'HrTipsSliderController@destroy_tip')->name('hr_tip.destroy');
+Route::get('/HrTipsSlider/{id}/edit', 'HrTipsSliderController@edit_tip')->name('hr_tip.edit');
+Route::put('/HrTipsSlider/{id}', 'HrTipsSliderController@update_tip')->name('hr_tip.update');
+//---------------------------------------------------------------------------------------------------
+
 //upload general notification file
 // Route::get('/upload_note', 'NotificationController@showForm');
 // Route::post('/upload_note', 'NotificationController@storeData');
@@ -98,7 +136,42 @@ Route::resource('tickets' ,'TicketsController');
 
 //complain-----
 Route::resource('complains' ,'ComplainController');
+Route::post('/complains/reply', 'ComplainController@storeReply')->name('complain_replay.store');
 //-------------
+
+//chat routes
+Route::get('Chat','ChatController@chat');
+Route::get('chatSession',function()
+{
+    return session('chatSession');
+});
+
+Route::post('send','ChatController@send');
+Route::post('getOldMessages','ChatController@getOldMessages');
+Route::post('deleteSession','ChatController@deleteSession');
+Route::post('saveToSession','ChatController@saveToSession');
+//-----------
+
+Route::get('chatRoom','MessageController@chat');
+Route::get('allUsres', 'MessageController@all_users_list')->name('allUsres');
+Route::get('userList', 'MessageController@user_list')->name('users');
+Route::post('userListSearch', 'MessageController@search_users')->name('userListSearch');
+Route::get('userMessages/{id}', 'MessageController@user_messages')->name('userMessages');
+Route::post('sendMessage', 'MessageController@send_message')->name('sendMessage');
+Route::get('deleteSingleMessage/{id}', 'MessageController@delete_single_message')->name('deleteSingleMessage');
+Route::get('deleteAllMessages/{id}', 'MessageController@delete_all_message')->name('deleteAllMessages');
+Route::get('allGroups', 'MessageController@all_users_groups')->name('allGroups');
+Route::post('groupUsers', 'MessageController@all_group_users')->name('groupUsers');
+
+
+//--------------------------------------WhatsApp Messages-------------------------------------------------------------
+
+
+//upload employee notification file
+Route::get('/wMessages', 'WhatsMessage@index')->name('wMessages');
+Route::post('/sendWMessages', 'WhatsMessage@sendWMessages')->name('sendWMessages');
+
+//---------------------------------------------------------------------------------------------------
 
 Auth::routes();
 
